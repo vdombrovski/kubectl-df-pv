@@ -37,7 +37,7 @@ func InitAndExecute() {
 
 type Flagpole struct {
 	logLevel              string
-	genericCliConfigFlags *genericclioptions.ConfigFlags
+	ConfigFlags *genericclioptions.ConfigFlags
 	disableColor          bool
 }
 
@@ -60,8 +60,8 @@ It colors the values based on "severity" [red: > 75% (too high); yellow: < 25% (
 	rootCmd.PersistentFlags().StringVarP(&flags.logLevel, "verbosity", "v", "info", "log level; one of [info, debug, trace, warn, error, fatal, panic]")
 	rootCmd.Flags().BoolVarP(&flags.disableColor, "disable-color", "d", false, "boolean flag for disabling colored output")
 
-	flags.genericCliConfigFlags = genericclioptions.NewConfigFlags(false)
-	flags.genericCliConfigFlags.AddFlags(rootCmd.Flags())
+	flags.ConfigFlags = genericclioptions.NewConfigFlags(false)
+	flags.ConfigFlags.AddFlags(rootCmd.Flags())
 
 	return rootCmd
 }
@@ -80,7 +80,7 @@ func runRootCommand(flags *Flagpole) error {
 
 	if nil == sliceOfOutputRowPVC || 0 > len(sliceOfOutputRowPVC) {
 		// ns := flags.namespace
-		ns := *flags.genericCliConfigFlags.Namespace
+		ns := *flags.ConfigFlags.Namespace
 		if 0 == len(ns) {
 			ns = "all"
 		}
@@ -318,7 +318,7 @@ func GetSliceOfOutputRowPVC(flags *Flagpole) ([]*OutputRowPVC, error) {
 
 	ctx := context.Background()
 
-	kubeConfig, err := GetKubeConfigFromGenericCliConfigFlags(flags.genericCliConfigFlags)
+	kubeConfig, err := GetKubeConfigFromGenericCliConfigFlags(flags.ConfigFlags)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to build config from flags")
 	}
@@ -340,7 +340,7 @@ func GetSliceOfOutputRowPVC(flags *Flagpole) ([]*OutputRowPVC, error) {
 		return nil, errors.Wrapf(err, "failed to create clientset")
 	}
 
-	desiredNamespace := *flags.genericCliConfigFlags.Namespace
+	desiredNamespace := *flags.ConfigFlags.Namespace
 	// desiredNamespace := flags.namespace
 	var sliceOfNodeName []string
 	if 0 == len(desiredNamespace) {
