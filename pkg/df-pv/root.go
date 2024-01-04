@@ -35,14 +35,14 @@ func InitAndExecute() {
 	}
 }
 
-type flagpole struct {
+type Flagpole struct {
 	logLevel              string
 	genericCliConfigFlags *genericclioptions.ConfigFlags
 	disableColor          bool
 }
 
 func setupRootCommand() *cobra.Command {
-	flags := &flagpole{}
+	flags := &Flagpole{}
 	var rootCmd = &cobra.Command{
 		Use:   "df-pv",
 		Short: "df-pv emulates Unix style df for persistent volumes",
@@ -66,7 +66,7 @@ It colors the values based on "severity" [red: > 75% (too high); yellow: < 25% (
 	return rootCmd
 }
 
-func runRootCommand(flags *flagpole) error {
+func runRootCommand(flags *Flagpole) error {
 	logLevel, _ := log.ParseLevel(flags.logLevel)
 	log.SetLevel(logLevel)
 	log.SetFormatter(&log.TextFormatter{
@@ -314,7 +314,7 @@ type Volume struct {
 }
 
 // GetSliceOfOutputRowPVC gets the output row
-func GetSliceOfOutputRowPVC(flags *flagpole) ([]*OutputRowPVC, error) {
+func GetSliceOfOutputRowPVC(flags *Flagpole) ([]*OutputRowPVC, error) {
 
 	ctx := context.Background()
 
